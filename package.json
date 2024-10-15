@@ -18,10 +18,12 @@
     "start": "cross-env NODE_OPTIONS=--no-deprecation next start"
   },
   "dependencies": {
+    "@octokit/rest": "^21.0.2",
     "@payloadcms/db-mongodb": "beta",
     "@payloadcms/live-preview-react": "beta",
     "@payloadcms/next": "beta",
     "@payloadcms/plugin-cloud": "beta",
+    "@payloadcms/plugin-cloud-storage": "3.0.0-beta.113",
     "@payloadcms/plugin-form-builder": "beta",
     "@payloadcms/plugin-nested-docs": "beta",
     "@payloadcms/plugin-redirects": "beta",

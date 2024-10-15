@@ -1,6 +1,5 @@
 // storage-adapter-import-placeholder
 import { mongooseAdapter } from '@payloadcms/db-mongodb'
-
 import { payloadCloudPlugin } from '@payloadcms/plugin-cloud'
 import { formBuilderPlugin } from '@payloadcms/plugin-form-builder'
 import { nestedDocsPlugin } from '@payloadcms/plugin-nested-docs'
@@ -35,6 +34,10 @@ import { Page, Post } from 'src/payload-types'
 
 import { searchFields } from '@/search/fieldOverrides'
 import { beforeSyncWithSearch } from '@/search/beforeSync'
+import { generateFileData } from 'payload/dist/uploads/generateFileData'
+import { cloudStoragePlugin } from '@payloadcms/plugin-cloud-storage'
+import { GenerateFileURL } from '@payloadcms/plugin-cloud-storage/types'
+import { testAdapt } from '@/collections/adapters/adapters'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -135,6 +138,20 @@ export default buildConfig({
   ],
   globals: [Header, Footer],
   plugins: [
+    cloudStoragePlugin({
+      enabled: true,
+      collections: {
+        media: {
+          disableLocalStorage: true,
+          adapter: testAdapt,
+          generateFileURL: (args) => {
+            const url = `${process.env.CDN_DOMAIN}/${args.filename}`
+            console.log('url is now:',url)
+            return url
+          }
+        },
+      },
+    }),
     redirectsPlugin({
       collections: ['pages', 'posts'],
       overrides: {
@@ -199,7 +216,6 @@ export default buildConfig({
         },
       },
     }),
-    payloadCloudPlugin(), // storage-adapter-placeholder
   ],
   secret: process.env.PAYLOAD_SECRET!,
   sharp,
